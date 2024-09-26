@@ -1,0 +1,17 @@
+meta {
+  name: Get Request
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:3000/healthz
+  body: none
+  auth: none
+}
+
+body:json {
+  {
+    "Name" : "Kishor"
+  }
+}

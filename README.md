@@ -13,14 +13,14 @@ This project implements a simple health check API in Node.js using Express and S
 
 ## Installation
 
-1. **Clone the repository**:
+1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-repo/health-check-api.git
+   git clone https://github.com/cloudapp-kishor/webapp.git
 
-2. **Install dependencies:**:
+2. **Install dependencies:**
    npm install
 
-3. **Create a .env file in the root directory with your database configuration**:
+3. **Create a .env file in the root directory with your database configuration:**
 
-4. **Start the application:**:
+4. **Start the application:**
    node server.js

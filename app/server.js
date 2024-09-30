@@ -2,6 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const healthRoutes = require('./routes/healthRoutes');
 const checkPayload = require('./middleware/routesMiddleware.js');
+const userRoutes = require('./routes/userRoutes');
+const authenticate = require('./middleware/authMiddleware.js');
+const { sequelize } = require('./databaseConfig/databaseConnect.js');
 
 const app = express();
 
@@ -15,6 +18,19 @@ app.use('/healthz', healthRoutes);
 // app.all('/healthz', (req, res) => {
 //     res.status(405).send();
 // });
+
+app.use(userRoutes);
+
+
+// Automatic table creation/sync at startup
+sequelize.sync({ alter: true })  // Set alter: true to adjust columns without dropping tables
+  .then(() => {
+    console.log("Database synchronized successfully.");
+  })
+  .catch(err => {
+    console.error("Error during database synchronization:", err);
+  });
+
 
 app.all('/healthz', (req, res) => {
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

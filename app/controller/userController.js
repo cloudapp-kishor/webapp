@@ -1,10 +1,10 @@
-const { createNewUser, getUserById, updateUserDetails } = require('../services/userService');
+const { createNewUser, getUserByEmail, getUserById, updateUserDetails } = require('../services/userService');
 
 const createUserController = async (req, res) => {
   try {
     const user = await createNewUser(req.body);
     const { id, first_name, last_name, email, account_created, account_updated } = user;
-    res.status(201).json({ id, first_name, last_name, email, account_created, account_updated });
+    res.status(201).json({first_name, last_name, email, account_created, account_updated });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

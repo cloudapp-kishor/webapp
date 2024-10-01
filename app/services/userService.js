@@ -13,16 +13,21 @@ const isValidEmail = (email) => {
 };
 
 
-const createNewUser = async (userData) => {
-  const { first_name, last_name, email, password, ...extraFields } = userData;
-  //console.log("password:", password)
+const createNewUser = async (req) => {
 
-  if (!isValidEmail(email)) {
-    throw new Error('Invalid email format');
+  if (!req.is('application/json')) {
+    throw new Error('Request body must be in JSON format');
   }
+
+  const { first_name, last_name, email, password, ...extraFields } = req.body;
+  //console.log("password:", password)
 
   if (!first_name || !last_name || !password || !email || Object.keys(extraFields).length > 0) {
     throw new Error("Invalid Request Body");
+  }
+
+  if (!isValidEmail(email)) {
+    throw new Error('Invalid email format');
   }
 
   if (typeof first_name !== 'string' || typeof last_name !== 'string' || typeof password !== 'string') {
@@ -48,7 +53,11 @@ const getUserByEmail = async (email) => {
 };
 
 
-const updateUserDetails = async (email, dataToUpdate) => {
+const updateUserDetails = async (email, req) => {
+
+    if (!req.is('application/json')) {
+      throw new Error('Request body must be in JSON format');
+    }
 
     const user = await User.findOne({ where: { email } });
 
@@ -60,7 +69,7 @@ const updateUserDetails = async (email, dataToUpdate) => {
     }
   
     // Destructure the fields you want to update
-    const { first_name, last_name, password, ...extraFields } = dataToUpdate;
+    const { first_name, last_name, password, ...extraFields } = req.body;
 
     if (Object.keys(extraFields).length > 0) {
       throw new Error('You cannot update fields other than firstname, lastname or password');

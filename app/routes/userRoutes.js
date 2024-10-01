@@ -4,9 +4,22 @@ const basicAuthorization = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.post('/v1/user', createUserController);
+const headers = {
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
+};
 
-router.get('/v1/user/self', basicAuthorization, getUserController);
-router.put('/v1/user/self', basicAuthorization, updateUserController);
+router.head('/user/self', (req,res) => {res.status(405).header(headers).send();});
+router.head('/user', (req,res) => {res.status(405).header(headers).send();});
+router.options('/user', (req,res) => {res.status(405).header(headers).send();});
+router.options('/user/self', (req,res) => {res.status(405).header(headers).send();});
+
+router.post('/user', createUserController);
+
+router.get('/user/self', basicAuthorization, getUserController);
+router.put('/user/self', basicAuthorization, updateUserController);
+
+router.all('/user', (req,res) => {res.status(405).header(headers).send();});
+router.all('/user/self', (req,res) => {res.status(405).header(headers).send();});
 
 module.exports = router;

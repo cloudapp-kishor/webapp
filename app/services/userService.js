@@ -12,6 +12,11 @@ const isValidEmail = (email) => {
   return validator.isEmail(email);
 };
 
+const isValidPassword = (password) => {
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+  return passwordRegex.test(password);
+};
+
 
 const createNewUser = async (req) => {
 
@@ -32,6 +37,10 @@ const createNewUser = async (req) => {
 
   if (typeof first_name !== 'string' || typeof last_name !== 'string' || typeof password !== 'string') {
       throw new Error("Name and Password must be String");
+  }
+
+  if (!isValidPassword(password)) {
+    throw new Error('Password must be at least 6 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
   }
   
   const existingUser = await User.findOne({ where: { email } });
@@ -75,8 +84,16 @@ const updateUserDetails = async (email, req) => {
       throw new Error('You cannot update fields other than firstname, lastname or password');
     }
 
+    if ( !first_name || !last_name || !password ) {
+      throw new Error('Please provide all the required fields');
+    }
+
     if ( (first_name && typeof first_name !== 'string') || (last_name && typeof last_name !== 'string') || (password && typeof password !== 'string')) {
       throw new Error('Name and Password must be String');
+    }
+
+    if (!isValidPassword(password)) {
+      throw new Error('Password must be at least 6 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
     }
   
     // Update the fields only if they are provided
@@ -102,5 +119,4 @@ module.exports = {
   getUserByEmail,
   updateUserDetails,
   getUserById,
-  getUserByEmail
 };

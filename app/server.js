@@ -41,3 +41,5 @@ app.use((req, res) => {
   res.setHeader('Pragma', 'no-cache');
   res.status(404).send();
 });
+
+module.exports = app;

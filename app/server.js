@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 const express = require('express');
 const healthRoutes = require('./routes/healthRoutes');
 const checkPayload = require('./middleware/routesMiddleware.js');

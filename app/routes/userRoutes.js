@@ -1,8 +1,24 @@
 const express = require('express');
 const { createUserController, getUserController, updateUserController } = require('../controller/userController');
 const basicAuthorization = require('../middleware/authMiddleware');
+const { healthCheck } = require('../services/healthService');
 
 const router = express.Router();
+
+// Health check function embedded in each route
+const checkDatabaseConnection = async (req, res, next) => {
+    const isDatabaseConnected = await healthCheck();
+
+    if (isDatabaseConnected) {
+        next();
+    } else {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        return res.status(503).send('Service Unavailable: Database Connection Failed');
+    }
+};
+
+router.use(checkDatabaseConnection);
 
 const headers = {
     'Cache-Control': 'no-cache, no-store, must-revalidate',

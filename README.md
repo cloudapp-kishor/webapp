@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project implements a simple health check API in Node.js using Express and Sequelize ORM. The `/healthz` endpoint checks the database connection and responds with appropriate HTTP status codes.
+This project implements a simple health check API in Node.js using Express and Sequelize ORM. The `/healthz` endpoint checks the database connection and responds with appropriate HTTP status codes..
 
 
 ## Requirements

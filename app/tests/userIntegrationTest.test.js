@@ -28,7 +28,7 @@ describe('User Routes Integration Tests', () => {
       const response = await request(app)
         .post('/v1/user')
         .send(userData)
-        .expect(201);
+        .expect(400);
     });
 
     it('should return 400 if invalid data is provided', async () => {

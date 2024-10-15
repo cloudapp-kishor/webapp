@@ -74,8 +74,9 @@ build {
   sources = ["source.amazon-ebs.ubuntu"]
 
   provisioner "file" {
-    source      = "../../../webapp"
-    destination = "/home/ubuntu/mywebapp"
+    source      = "webapp.zip"
+    destination = "/tmp/webapp.zip"
+    generated   = true
   }
 
   provisioner "shell" {

@@ -88,7 +88,28 @@ build {
       "sudo mysql -e \"CREATE USER IF NOT EXISTS '${var.MYSQL_USER}' IDENTIFIED BY '${var.MYSQL_PASSWORD}';\"",
       "sudo mysql -e \"CREATE DATABASE IF NOT EXISTS ${var.MYSQL_DATABASE};\"",
       "sudo mysql -e \"GRANT ALL PRIVILEGES ON ${var.MYSQL_DATABASE}.* TO '${var.MYSQL_USER}';\"",
-      "sudo apt install -y nodejs npm"
+      "sudo apt install -y nodejs npm",
+
+      # Create and Set ownership csye6225 user with no login shell
+      "sudo useradd -r -s /usr/sbin/nologin -m csye6225",
+      "sudo chown -R csye6225:csye6225 /tmp/webapp.zip",
+
+      # Extract webapp and set up the systemd service
+      "sudo unzip /tmp/webapp.zip -d /opt/webapp",
+      "sudo chown -R csye6225:csye6225 /opt/webapp",
+
+      # Create and set up the systemd service
+      "echo '[Unit]' | sudo tee /etc/systemd/system/webapp.service",
+      "echo 'Description=WebApp Service' | sudo tee -a /etc/systemd/system/webapp.service",
+      "echo '[Service]' | sudo tee -a /etc/systemd/system/webapp.service",
+      "echo 'User=csye6225' | sudo tee -a /etc/systemd/system/webapp.service",
+      "echo 'ExecStart=/opt/webapp/start-webapp.sh' | sudo tee -a /etc/systemd/system/webapp.service",
+      "echo '[Install]' | sudo tee -a /etc/systemd/system/webapp.service",
+      "echo 'WantedBy=multi-user.target' | sudo tee -a /etc/systemd/system/webapp.service",
+
+      # Enable the service
+      "sudo systemctl daemon-reload",
+      "sudo systemctl enable webapp.service"
     ]
   }
 

@@ -34,6 +34,21 @@ variable "ami_name" {
   default = "webappAMI"
 }
 
+variable "MYSQL_USER" {
+  type    = string
+  default = "kishor"
+}
+ 
+variable "MYSQL_PASSWORD" {
+  type    = string
+  default = "kishor"
+}
+ 
+variable "MYSQL_DATABASE" {
+  type    = string
+  default = "cloudApp"
+}
+
 locals {
   ami_description = "Image for webapp"
   timestamp       = regex_replace(timestamp(), "[- TZ:]", "")
@@ -60,7 +75,7 @@ build {
 
   provisioner "file" {
     source      = "../../../webapp"
-    destination = "/home/ubuntu/"
+    destination = "/home/ubuntu/mywebapp"
   }
 
   provisioner "shell" {
@@ -68,7 +83,11 @@ build {
       "sudo apt update",
       "sudo apt -y install mysql-server",
       "sudo systemctl enable mysql",
-      "sudo systemctl start mysql"
+      "sudo systemctl start mysql",
+      "sudo mysql -e \"CREATE USER IF NOT EXISTS '${var.MYSQL_USER}' IDENTIFIED BY '${var.MYSQL_PASSWORD}';\"",
+      "sudo mysql -e \"CREATE DATABASE IF NOT EXISTS ${var.MYSQL_DATABASE};\"",
+      "sudo mysql -e \"GRANT ALL PRIVILEGES ON ${var.MYSQL_DATABASE}.* TO '${var.MYSQL_USER}';\"",
+      "sudo apt install -y nodejs npm"
     ]
   }
 

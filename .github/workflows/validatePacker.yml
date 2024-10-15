@@ -21,11 +21,11 @@ jobs:
           version: latest
 
       - name: Install plugins
-        run: packer init packer/aws_ami.pkr.hcl
+        run: packer init app/packer/aws_ami.pkr.hcl
 
       - name: Run packer fmt
-        run: packer fmt -check packer/aws_ami.pkr.hcl
+        run: packer fmt -check app/packer/aws_ami.pkr.hcl
 
       - name: Run packer validate
         run: |
-          packer validate packer/aws_ami.pkr.hcl
+          packer validate app/packer/aws_ami.pkr.hcl

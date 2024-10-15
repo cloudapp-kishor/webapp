@@ -38,12 +38,12 @@ variable "MYSQL_USER" {
   type    = string
   default = "kishor"
 }
- 
+
 variable "MYSQL_PASSWORD" {
   type    = string
   default = "kishor"
 }
- 
+
 variable "MYSQL_DATABASE" {
   type    = string
   default = "cloudApp"

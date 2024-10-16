@@ -80,7 +80,7 @@ build {
   }
 
   provisioner "file" {
-    source      = "app/packer/scripts/webapp.js"
+    source      = "app/packer/scripts/webapp.service"
     destination = "/tmp/webapp.service"
   }
 

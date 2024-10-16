@@ -3,7 +3,7 @@ name: Packer Validation
 on:
   push:
     branches:
-        - A04-02
+        - A04-01
 
 jobs:
   build:

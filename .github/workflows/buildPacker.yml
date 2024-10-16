@@ -33,7 +33,7 @@ jobs:
         cat .env
 
     - name: Zip Webapp Directory
-      run: zip -r webapp.zip ./webapp
+      run: zip -r webapp.zip .
 
     - name: Check if webapp.zip Exists
       run: |

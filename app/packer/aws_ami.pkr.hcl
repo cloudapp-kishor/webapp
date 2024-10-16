@@ -63,6 +63,7 @@ source "amazon-ebs" "ubuntu" {
   ami_description = local.ami_description
   vpc_id          = var.vpc_id
   subnet_id       = var.subnet_id
+  ami_users       = []
 
   tags = {
     Name        = "webapp-image"

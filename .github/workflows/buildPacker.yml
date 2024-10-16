@@ -54,8 +54,11 @@ jobs:
     - name: Install Packer
       run: sudo apt-get install -y packer
 
+    - name: Install plugins
+      run: packer init app/packer/.
+
     - name: Validate Packer Template
-      run: packer validate app/packer/aws_ami.pkr.hcl
+      run: packer validate app/packer/.
 
     - name: Build Packer Image
-      run: packer build app/packer/aws_ami.pkr.hcl
+      run: packer build app/packer/.

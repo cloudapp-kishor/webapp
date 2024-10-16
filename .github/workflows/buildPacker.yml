@@ -26,10 +26,10 @@ jobs:
       run: |
         touch .env
         echo "PORT=${{secrets.PORT}}" >> .env
-        echo "DATABASE_NAME=${{secrets.DB_NAME}}" >> .env
-        echo "DATABASE_PASSWORD=${{secrets.DB_PASSWORD}}" >> .env
-        echo "DATABASE_USER=${{secrets.DB_USER}}" >> .env
-        echo "HOST=${{secrets.DB_HOST}}" >> .env
+        echo "DB_NAME=${{secrets.DB_NAME}}" >> .env
+        echo "DB_PASSWORD=${{secrets.DB_PASSWORD}}" >> .env
+        echo "DB_USER=${{secrets.DB_USER}}" >> .env
+        echo "DB_HOST=${{secrets.DB_HOST}}" >> .env
         cat .env
 
     - name: Zip Webapp Directory

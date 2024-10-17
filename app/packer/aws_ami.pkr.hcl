@@ -22,12 +22,10 @@ variable "instance_type" {
 
 variable "vpc_id" {
   description = "VPC ID where the instance should be launched"
-  default     = "vpc-076364b954e7bed4d"
 }
 
 variable "subnet_id" {
   description = "Subnet ID in the specified VPC"
-  default     = "subnet-00550c025d06b5058"
 }
 
 variable "ami_name" {
@@ -35,18 +33,15 @@ variable "ami_name" {
 }
 
 variable "MYSQL_USER" {
-  type    = string
-  default = "kishor"
+  type = string
 }
 
 variable "MYSQL_PASSWORD" {
-  type    = string
-  default = "kishor"
+  type = string
 }
 
 variable "MYSQL_DATABASE" {
-  type    = string
-  default = "cloudApp"
+  type = string
 }
 
 locals {

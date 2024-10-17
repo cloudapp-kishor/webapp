@@ -28,4 +28,10 @@ jobs:
 
       - name: Run packer validate
         run: |
-          packer validate app/packer/aws_ami.pkr.hcl
+          packer validate \
+          -var "vpc_id=${{secrets.VPC_ID}}" \
+          -var "subnet_id=${{secrets.SUBNET_ID}}" \
+          -var "MYSQL_USER=${{secrets.DB_USER}}" \
+          -var "MYSQL_PASSWORD=${{secrets.DB_PASSWORD}}" \
+          -var "MYSQL_DATABASE=${{secrets.DB_NAME}}" \
+          app/packer/.

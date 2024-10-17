@@ -99,13 +99,36 @@ jobs:
       run: packer init app/packer/.
 
     - name: Validate Packer Template
-      run: packer validate app/packer/.
+      run: |
+        packer validate \
+        -var "vpc_id=${{secrets.VPC_ID}}" \
+        -var "subnet_id=${{secrets.SUBNET_ID}}" \
+        -var "MYSQL_USER=${{secrets.DB_USER}}" \
+        -var "MYSQL_PASSWORD=${{secrets.DB_PASSWORD}}" \
+        -var "MYSQL_DATABASE=${{secrets.DB_NAME}}" \
+        app/packer/.
 
     - name: Build Packer Image
-      run: packer build app/packer/.
+      run: |
+        packer build \
+        -var "vpc_id=${{secrets.VPC_ID}}" \
+        -var "subnet_id=${{secrets.SUBNET_ID}}" \
+        -var "MYSQL_USER=${{secrets.DB_USER}}" \
+        -var "MYSQL_PASSWORD=${{secrets.DB_PASSWORD}}" \
+        -var "MYSQL_DATABASE=${{secrets.DB_NAME}}" \
+        app/packer/.
+
+    - name: Retrieve AMI ID
+      id: get-ami-id
+      run: |
+        AMI_ID=$(aws ec2 describe-images --owners self --filters 'Name=name,Values=webapp-*' --query 'Images[0].ImageId' --output text)
+        if [ "$AMI_ID" == "None" ]; then
+          echo "Error: No AMI found matching the name pattern."
+          exit 1
+        fi
+        echo "AMI_ID=$AMI_ID"
+        echo "AMI_ID=$AMI_ID" >> $GITHUB_ENV
 
     - name: Share AMI with DEMO Account
       run: |
-        AMI_ID=$(packer build -machine-readable packer-template.json | awk -F, '/artifact,0,id/ {print $6}')
-        echo "Built AMI ID: $AMI_ID"
-        aws ec2 modify-image-attribute --image-id $AMI_ID --launch-permission "{\"Add\":[{\"UserId\":\"${{ secrets.DEMO_ACCOUNT_ID }}\"}]}"
+        aws ec2 modify-image-attribute --image-id ${{ env.AMI_ID }} --launch-permission "{\"Add\":[{\"UserId\":\"${{ secrets.DEMO_ACCOUNT_ID }}\"}]}"

@@ -99,7 +99,25 @@ jobs:
       run: packer init app/packer/.
 
     - name: Validate Packer Template
-      run: packer validate app/packer/.
+      run: |
+        packer validate -var "MYSQL_USER=${{secrets.DB_USER}}" \
+                        -var "MYSQL_PASSWORD=${{secrets.DB_PASSWORD}}" \
+                        -var "MYSQL_DATABASE=${{secrets.DB_NAME}}" \
+                        -var "vpc_id=${{secrets.VPC_ID}}" \
+                        -var "subnet_id=${{secrets.SUBNET_ID}}" \
+                        app/packer/.
 
     - name: Build Packer Image
-      run: packer build app/packer/.
+      run: |
+        packer build -var "MYSQL_USER=${{secrets.DB_USER}}" \
+                     -var "MYSQL_PASSWORD=${{secrets.DB_PASSWORD}}" \
+                     -var "MYSQL_DATABASE=${{secrets.DB_NAME}}" \
+                     -var "vpc_id=${{secrets.VPC_ID}}" \
+                     -var "subnet_id=${{secrets.SUBNET_ID}}" \
+                     app/packer/
+
+    - name: Share AMI with DEMO Account
+      run: |
+        AMI_ID=$(packer build -machine-readable packer-template.json | awk -F, '/artifact,0,id/ {print $6}')
+        echo "Built AMI ID: $AMI_ID"
+        aws ec2 modify-image-attribute --image-id $AMI_ID --launch-permission "{\"Add\":[{\"UserId\":\"${{ secrets.DEMO_ACCOUNT_ID }}\"}]}"

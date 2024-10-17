@@ -103,3 +103,9 @@ jobs:
 
     - name: Build Packer Image
       run: packer build app/packer/.
+
+    - name: Share AMI with DEMO Account
+      run: |
+        AMI_ID=$(packer build -machine-readable packer-template.json | awk -F, '/artifact,0,id/ {print $6}')
+        echo "Built AMI ID: $AMI_ID"
+        aws ec2 modify-image-attribute --image-id $AMI_ID --launch-permission "{\"Add\":[{\"UserId\":\"${{ secrets.DEMO_ACCOUNT_ID }}\"}]}"

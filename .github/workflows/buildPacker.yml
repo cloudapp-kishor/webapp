@@ -106,6 +106,8 @@ jobs:
         -var "MYSQL_USER=${{secrets.DB_USER}}" \
         -var "MYSQL_PASSWORD=${{secrets.DB_PASSWORD}}" \
         -var "MYSQL_DATABASE=${{secrets.DB_NAME}}" \
+        -var "DEMO_ACCOUNT_ID=${{secrets.DEMO_ACCOUNT_ID}}" \
+        -var "DEV_ACCOUNT_ID=${{secrets.DEV_ACCOUNT_ID}}" \
         app/packer/.
 
     - name: Build Packer Image
@@ -116,20 +118,7 @@ jobs:
         -var "MYSQL_USER=${{secrets.DB_USER}}" \
         -var "MYSQL_PASSWORD=${{secrets.DB_PASSWORD}}" \
         -var "MYSQL_DATABASE=${{secrets.DB_NAME}}" \
+        -var "DEMO_ACCOUNT_ID=${{secrets.DEMO_ACCOUNT_ID}}" \
+        -var "DEV_ACCOUNT_ID=${{secrets.DEV_ACCOUNT_ID}}" \
         app/packer/.
-
-    - name: Build AMI using Packer
-      run: |
-        packer build -machine-readable app/packer/aws_ami.pkr.hcl | tee packer_output.txt
-        AMI_ID=$(awk -F, '/artifact,0,id/ {print $6}' packer_output.txt)
-        echo "Built AMI ID: $AMI_ID"
-        if [ -z "$AMI_ID" ]; then
-          echo "Failed to build AMI or extract AMI ID"
-          exit 1
-        fi
-        aws ec2 modify-image-attribute --image-id $AMI_ID --launch-permission "{\"Add\":[{\"UserId\":\"***\"}]}"
-      env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       

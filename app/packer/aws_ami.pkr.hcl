@@ -44,6 +44,14 @@ variable "MYSQL_DATABASE" {
   type = string
 }
 
+variable "DEMO_ACCOUNT_ID" {
+  type = string
+}
+
+variable "DEV_ACCOUNT_ID" {
+  type = string
+}
+
 locals {
   ami_description = "Image for webapp"
   timestamp       = regex_replace(timestamp(), "[- TZ:]", "")
@@ -58,7 +66,7 @@ source "amazon-ebs" "ubuntu" {
   ami_description = local.ami_description
   vpc_id          = var.vpc_id
   subnet_id       = var.subnet_id
-  ami_users       = []
+  ami_users       = [var.DEV_ACCOUNT_ID, var.DEMO_ACCOUNT_ID]
 
   tags = {
     Name        = "webapp-image"

@@ -22,12 +22,10 @@ variable "instance_type" {
 
 variable "vpc_id" {
   description = "VPC ID where the instance should be launched"
-  default     = "vpc-076364b954e7bed4d"
 }
 
 variable "subnet_id" {
   description = "Subnet ID in the specified VPC"
-  default     = "subnet-00550c025d06b5058"
 }
 
 variable "ami_name" {
@@ -35,18 +33,15 @@ variable "ami_name" {
 }
 
 variable "MYSQL_USER" {
-  type    = string
-  default = "kishor"
+  type = string
 }
 
 variable "MYSQL_PASSWORD" {
-  type    = string
-  default = "kishor"
+  type = string
 }
 
 variable "MYSQL_DATABASE" {
-  type    = string
-  default = "cloudApp"
+  type = string
 }
 
 locals {
@@ -97,9 +92,9 @@ build {
       "sudo apt -y install mysql-server",
       "sudo systemctl enable mysql",
       "sudo systemctl start mysql",
-      "sudo mysql -e \"CREATE USER IF NOT EXISTS '${var.MYSQL_USER}' IDENTIFIED BY '${var.MYSQL_PASSWORD}';\"",
-      "sudo mysql -e \"CREATE DATABASE IF NOT EXISTS ${var.MYSQL_DATABASE};\"",
-      "sudo mysql -e \"GRANT ALL PRIVILEGES ON ${var.MYSQL_DATABASE}.* TO '${var.MYSQL_USER}';\"",
+      "sudo mysql -e \"CREATE USER IF NOT EXISTS '${MYSQL_USER}' IDENTIFIED BY '${MYSQL_PASSWORD}';\"",
+      "sudo mysql -e \"CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};\"",
+      "sudo mysql -e \"GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}';\"",
       "sudo apt install -y nodejs npm",
       "sudo apt install unzip -y",
       "node -v",

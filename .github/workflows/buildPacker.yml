@@ -99,13 +99,37 @@ jobs:
       run: packer init app/packer/.
 
     - name: Validate Packer Template
-      run: packer validate app/packer/.
+      run: |
+        packer validate \
+        -var "vpc_id=${{secrets.VPC_ID}}" \
+        -var "subnet_id=${{secrets.SUBNET_ID}}" \
+        -var "MYSQL_USER=${{secrets.DB_USER}}" \
+        -var "MYSQL_PASSWORD=${{secrets.DB_PASSWORD}}" \
+        -var "MYSQL_DATABASE=${{secrets.DB_NAME}}" \
+        app/packer/.
 
     - name: Build Packer Image
-      run: packer build app/packer/.
+      run: |
+        packer build \
+        -var "vpc_id=${{secrets.VPC_ID}}" \
+        -var "subnet_id=${{secrets.SUBNET_ID}}" \
+        -var "MYSQL_USER=${{secrets.DB_USER}}" \
+        -var "MYSQL_PASSWORD=${{secrets.DB_PASSWORD}}" \
+        -var "MYSQL_DATABASE=${{secrets.DB_NAME}}" \
+        app/packer/.
 
     - name: Share AMI with DEMO Account
       run: |
-        AMI_ID=$(packer build -machine-readable packer-template.json | awk -F, '/artifact,0,id/ {print $6}')
+        packer build -machine-readable app/packer/aws_ami.pkr.hcl | tee packer_output.txt
+        AMI_ID=$(awk -F, '/artifact,0,id/ {print $6}' packer_output.txt)
         echo "Built AMI ID: $AMI_ID"
-        aws ec2 modify-image-attribute --image-id $AMI_ID --launch-permission "{\"Add\":[{\"UserId\":\"${{ secrets.DEMO_ACCOUNT_ID }}\"}]}"
+        if [ -z "$AMI_ID" ]; then
+          echo "Failed to build AMI or extract AMI ID"
+          exit 1
+        fi
+        aws ec2 modify-image-attribute --image-id $AMI_ID --launch-permission "{\"Add\":[{\"UserId\":\"***\"}]}"
+      env:
+        AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

@@ -34,4 +34,6 @@ jobs:
           -var "MYSQL_USER=${{secrets.DB_USER}}" \
           -var "MYSQL_PASSWORD=${{secrets.DB_PASSWORD}}" \
           -var "MYSQL_DATABASE=${{secrets.DB_NAME}}" \
+          -var "DEMO_ACCOUNT_ID=${{secrets.DEMO_ACCOUNT_ID}}" \
+          -var "DEV_ACCOUNT_ID=${{secrets.DEV_ACCOUNT_ID}}" \
           app/packer/.

@@ -97,12 +97,12 @@ build {
   provisioner "shell" {
     inline = [
       "sudo apt update",
-      "sudo apt -y install mysql-server",
-      "sudo systemctl enable mysql",
-      "sudo systemctl start mysql",
-      "sudo mysql -e \"CREATE USER IF NOT EXISTS '${var.MYSQL_USER}' IDENTIFIED BY '${var.MYSQL_PASSWORD}';\"",
-      "sudo mysql -e \"CREATE DATABASE IF NOT EXISTS ${var.MYSQL_DATABASE};\"",
-      "sudo mysql -e \"GRANT ALL PRIVILEGES ON ${var.MYSQL_DATABASE}.* TO '${var.MYSQL_USER}';\"",
+      #"sudo apt -y install mysql-server",
+      #"sudo systemctl enable mysql",
+      #"sudo systemctl start mysql",
+      #"sudo mysql -e \"CREATE USER IF NOT EXISTS '${var.MYSQL_USER}' IDENTIFIED BY '${var.MYSQL_PASSWORD}';\"",
+      #"sudo mysql -e \"CREATE DATABASE IF NOT EXISTS ${var.MYSQL_DATABASE};\"",
+      #"sudo mysql -e \"GRANT ALL PRIVILEGES ON ${var.MYSQL_DATABASE}.* TO '${var.MYSQL_USER}';\"",
       "sudo apt install -y nodejs npm",
       "sudo apt install unzip -y",
       "node -v",
@@ -118,7 +118,8 @@ build {
       "sudo chown -R csye6225:csye6225 /tmp/webapp.zip",
 
       # Extract webapp and set up the systemd service
-      "sudo chown -R csye6225:csye6225 /opt/webapp"
+      "sudo chown -R csye6225:csye6225 /opt/webapp",
+      "sudo chmod -R 644 /opt/webapp"
     ]
   }
 

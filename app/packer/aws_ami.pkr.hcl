@@ -119,7 +119,7 @@ build {
 
       # Extract webapp and set up the systemd service
       "sudo chown -R csye6225:csye6225 /opt/webapp",
-      "sudo chmod -R 644 /opt/webapp"
+      "sudo chmod -R 755 /opt/webapp"
     ]
   }
 

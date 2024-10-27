@@ -6,6 +6,7 @@ const userRoutes = require('./routes/userRoutes');
 const authenticate = require('./middleware/authMiddleware.js');
 const { sequelize } = require('./databaseConfig/databaseConnect.js');
 const { createDatabase } = require('./databaseConfig/databaseConnect.js');
+const imageRoutes = require('./routes/imageRoutes.js');
 
 
 createDatabase()
@@ -29,6 +30,8 @@ app.use(checkPayload);
 app.use('/healthz', healthRoutes);
 
 app.use('/v1', userRoutes);
+
+app.use('/v1/user/self/pic', imageRoutes);
 
 app.all('/healthz', (req, res) => {
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

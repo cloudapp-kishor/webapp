@@ -7,19 +7,27 @@ const authenticate = require('./middleware/authMiddleware.js');
 const { sequelize } = require('./databaseConfig/databaseConnect.js');
 const { createDatabase } = require('./databaseConfig/databaseConnect.js');
 const imageRoutes = require('./routes/imageRoutes.js');
+const logger = require('./logger.js');
 
 
 createDatabase()
   .then(() => {
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+      logger.debug({
+        message: `Server running successfully on PORT ${PORT}`
+      });
+      console.log(`Server running successfully on PORT ${PORT}`);
     });
   })
   .catch(err => {
+    logger.error({
+      message: "Failed to initialize database",
+      error: err
+    });
     console.error("Failed to initialize database:", err);
   });
-  
+
 
 const app = express();
 
@@ -34,9 +42,9 @@ app.use('/v1', userRoutes);
 app.use('/v1/user/self/pic', imageRoutes);
 
 app.all('/healthz', (req, res) => {
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.setHeader('Pragma', 'no-cache');
-    res.status(405).send();
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.status(405).send();
 });
 
 app.use((req, res) => {

@@ -94,6 +94,11 @@ build {
     generated   = true
   }
 
+  provisioner "file" {
+    source      = "app/packer/cloudwatch-config.json"
+    destination = "/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json"
+  }
+
   provisioner "shell" {
     inline = [
       "sudo apt update",
@@ -125,15 +130,6 @@ build {
 
   provisioner "shell" {
     inline = [
-      # Enable the service
-      "sudo systemctl daemon-reload",
-      "sudo systemctl enable webapp.service"
-    ]
-  }
-
-  # CloudWatch Agent Installation and Configuration
-  provisioner "shell" {
-    inline = [
       "sudo apt-get update",
       "sudo apt-get install -y wget",
       "wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb",
@@ -144,60 +140,9 @@ build {
 
   provisioner "shell" {
     inline = [
-      "sudo mkdir -p /opt/aws/amazon-cloudwatch-agent/etc",
-      "cat <<EOT | sudo tee /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json > /dev/null",
-      "  {",
-      "    \"agent\": {",
-      "      \"metrics_collection_interval\": 60,",
-      "      \"logfile\": \"/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log\"",
-      "    },",
-      "    \"logs\": {",
-      "      \"logs_collected\": {",
-      "        \"files\": {",
-      "          \"collect_list\": [",
-      "            {",
-      "              \"file_path\": \"/var/log/syslog\",",
-      "              \"log_group_name\": \"syslog\",",
-      "              \"log_stream_name\": \"{instance_id}\"",
-      "            },",
-      "            {",
-      "              \"file_path\": \"/var/log/myapp.log\",",
-      "              \"log_group_name\": \"myapp-log\",",
-      "              \"log_stream_name\": \"{instance_id}\"",
-      "            }",
-      "          ]",
-      "        }",
-      "      }",
-      "    },",
-      "    \"metrics\": {",
-      "      \"metrics_collected\": {",
-      "        \"mem\": {",
-      "          \"measurement\": [\"mem_used_percent\"],",
-      "          \"metrics_collection_interval\": 60",
-      "        },",
-      "        \"disk\": {",
-      "          \"measurement\": [\"used_percent\"],",
-      "          \"metrics_collection_interval\": 60,",
-      "          \"resources\": [\"*\"]",
-      "        },",
-      "        \"cpu\": {",
-      "          \"measurement\": [",
-      "            \"cpu_usage_idle\",",
-      "            \"cpu_usage_user\",",
-      "            \"cpu_usage_system\"",
-      "          ],",
-      "          \"metrics_collection_interval\": 60",
-      "        }",
-      "      }",
-      "    }",
-      "  }",
-      "EOT"
-    ]
-  }
-
-  provisioner "shell" {
-    inline = [
-      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json -s"
+      # Enable the service
+      "sudo systemctl daemon-reload",
+      "sudo systemctl enable webapp.service"
     ]
   }
 }

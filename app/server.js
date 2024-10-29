@@ -7,7 +7,7 @@ const authenticate = require('./middleware/authMiddleware.js');
 const { sequelize } = require('./databaseConfig/databaseConnect.js');
 const { createDatabase } = require('./databaseConfig/databaseConnect.js');
 const imageRoutes = require('./routes/imageRoutes.js');
-const logger = require('./logger.js');
+const {logger} = require('./logger.js');
 
 
 createDatabase()

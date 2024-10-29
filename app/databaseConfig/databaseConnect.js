@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const mysql = require('mysql2/promise');
-const logger = require('../logger.js');
+const {logger} = require('../logger.js');
 
 
 //console.log("DB_NAME:", process.env.DB_NAME);

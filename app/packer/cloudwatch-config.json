@@ -22,6 +22,9 @@
         }
     },
     "metrics": {
+        "append_dimensions": {
+            "InstanceId": "${aws:InstanceId}"
+        },
         "metrics_collected": {
             "mem": {
                 "measurement": [
@@ -46,6 +49,9 @@
                 ],
                 "metrics_collection_interval": 60
             }
+        },
+        "statsd": {
+            "service_address": ":8125"
         }
     }
 }

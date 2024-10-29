@@ -1,5 +1,5 @@
 const imageService = require('../services/imageService');
-const logger = require('../logger');
+const {logger} = require('../logger');
 
 //Add profile pic
 const addProfilePic = async (req, res) => {

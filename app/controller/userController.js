@@ -1,5 +1,5 @@
 const { createNewUser, getUserByEmail, getUserById, updateUserDetails } = require('../services/userService');
-const logger = require('../logger');
+const {logger} = require('../logger');
 
 const createUserController = async (req, res) => {
   try {

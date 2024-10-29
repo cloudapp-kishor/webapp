@@ -94,6 +94,11 @@ build {
     generated   = true
   }
 
+  provisioner "file" {
+    source      = "app/packer/cloudwatch-config.json"
+    destination = "/tmp/cloudwatch-config.json"
+  }
+
   provisioner "shell" {
     inline = [
       "sudo apt update",
@@ -125,18 +130,20 @@ build {
 
   provisioner "shell" {
     inline = [
-      "sudo apt-get update",
       "sudo mkdir -p /opt/aws/amazon-cloudwatch-agent/etc",
+      "sudo mv /tmp/cloudwatch-config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json",
+      "sudo chown csye6225:csye6225 /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json"
+    ]
+  }
+
+  provisioner "shell" {
+    inline = [
+      "sudo apt-get update",
       "sudo apt-get install -y wget",
       "wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb",
       "sudo dpkg -i amazon-cloudwatch-agent.deb",
       "rm amazon-cloudwatch-agent.deb"
     ]
-  }
-
-  provisioner "file" {
-    source      = "app/packer/cloudwatch-config.json"
-    destination = "/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json"
   }
 
   provisioner "shell" {

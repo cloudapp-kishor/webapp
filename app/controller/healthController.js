@@ -1,18 +1,10 @@
 const { healthCheck } = require('../services/healthService');
 const {logger} = require('../logger');
-const {logWithMetrics} = require('../logger');
 
 const healthCheckStatus = async (req, res) => {
-
-    const startTime = Date.now();
     logger.info('Received health check request');
-    logWithMetrics.increment('api.healthCheck.call.count');
-
     res.setHeader('Cache-Control', 'no-cache');
     const isDatabaseConnected = await healthCheck();
-
-    const endTime = Date.now();
-    logWithMetrics.timing('api.healthCheck.response.time', endTime - startTime);
     
     if (isDatabaseConnected) {
         logger.info('Database connection is healthy');

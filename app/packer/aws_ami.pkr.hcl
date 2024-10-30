@@ -128,9 +128,9 @@ build {
       # Create and Set ownership csye6225 user with no login shell
       "sudo useradd -r -s /usr/sbin/nologin -m csye6225",
       "sudo chown -R csye6225:csye6225 /tmp/webapp.zip",
-      "sudo mkdir -p statsd",
+      "sudo mkdir -p /statsd",
       "sudo mv /tmp/statsd_config.js /statsd/",
-      "sudo chown csye6225:csye6225 /statsd",
+      "sudo chown csye6225:csye6225 /statsd/statsd_config.js",
 
       # Extract webapp and set up the systemd service
       "sudo chown -R csye6225:csye6225 /opt/webapp",

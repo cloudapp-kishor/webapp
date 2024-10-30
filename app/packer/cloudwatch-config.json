@@ -45,6 +45,11 @@
                     "cpu_usage_system"
                 ],
                 "metrics_collection_interval": 60
+            },
+            "statsd": {
+                "service_address": ":8125",
+                "metrics_collection_interval": 15,
+                "metrics_aggregation_interval": 300
             }
         }
     }

@@ -99,11 +99,6 @@ build {
     destination = "/tmp/cloudwatch-config.json"
   }
 
-  # provisioner "file" {
-  #   source      = "app/packer/statsd_config.js"
-  #   destination = "/tmp/statsd_config.js"
-  # }
-
   provisioner "shell" {
     inline = [
       "sudo apt update",
@@ -120,7 +115,6 @@ build {
       "sudo npm install -g statsd",
       "sudo npm install statsd-cloudwatch-backend",
 
-      #"sudo mv /tmp/webapp.zip /opt",
       "sudo mv /tmp/webapp.service /etc/systemd/system",
       "sudo unzip /tmp/webapp.zip -d /opt/webapp",
       "sudo mv /tmp/.env /opt/webapp",
@@ -128,9 +122,6 @@ build {
       # Create and Set ownership csye6225 user with no login shell
       "sudo useradd -r -s /usr/sbin/nologin -m csye6225",
       "sudo chown -R csye6225:csye6225 /tmp/webapp.zip",
-      # "sudo mkdir -p /statsd",
-      # "sudo mv /tmp/statsd_config.js /statsd/",
-      # "sudo chown csye6225:csye6225 /statsd/statsd_config.js",
 
       # Extract webapp and set up the systemd service
       "sudo chown -R csye6225:csye6225 /opt/webapp",

@@ -99,6 +99,11 @@ build {
     destination = "/tmp/cloudwatch-config.json"
   }
 
+  provisioner "file" {
+    source      = "app/packer/statsd_config.js"
+    destination = "/tmp/statsd_config.js"
+  }
+
   provisioner "shell" {
     inline = [
       "sudo apt update",
@@ -112,6 +117,9 @@ build {
       "sudo apt install unzip -y",
       "node -v",
       "npm -v",
+      "sudo mkdir -p statsd",
+      "sudo mv /tmp/statsd_config.js /statsd",
+      "sudo chown csye6225:csye6225 /statsd",
 
       #"sudo mv /tmp/webapp.zip /opt",
       "sudo mv /tmp/webapp.service /etc/systemd/system",

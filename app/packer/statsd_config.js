@@ -3,6 +3,6 @@ module.exports = {
     backends: ["statsd-cloudwatch-backend"],
     cloudwatch: {
         namespace: "MyApp",
-        region: process.env.AWS_REGION
+        region: "us-east-2"
     }
 };

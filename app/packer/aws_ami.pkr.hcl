@@ -117,8 +117,8 @@ build {
       "sudo apt install unzip -y",
       "node -v",
       "npm -v",
-      "npm install -g statsd",
-      "npm install statsd-cloudwatch-backend",
+      "sudo npm install -g statsd",
+      "sudo npm install statsd-cloudwatch-backend",
 
       #"sudo mv /tmp/webapp.zip /opt",
       "sudo mv /tmp/webapp.service /etc/systemd/system",

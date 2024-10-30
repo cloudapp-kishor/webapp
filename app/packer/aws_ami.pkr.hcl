@@ -117,8 +117,8 @@ build {
       "sudo apt install unzip -y",
       "node -v",
       "npm -v",
-      "sudo mkdir -p statsd",
-      "sudo mv /tmp/statsd_config.js /statsd",
+      "npm install -g statsd",
+      "npm install statsd-cloudwatch-backend",
 
       #"sudo mv /tmp/webapp.zip /opt",
       "sudo mv /tmp/webapp.service /etc/systemd/system",
@@ -128,6 +128,8 @@ build {
       # Create and Set ownership csye6225 user with no login shell
       "sudo useradd -r -s /usr/sbin/nologin -m csye6225",
       "sudo chown -R csye6225:csye6225 /tmp/webapp.zip",
+      "sudo mkdir -p statsd",
+      "sudo mv /tmp/statsd_config.js /statsd/",
       "sudo chown csye6225:csye6225 /statsd",
 
       # Extract webapp and set up the systemd service
@@ -162,7 +164,8 @@ build {
     inline = [
       # Enable the service
       "sudo systemctl daemon-reload",
-      "sudo systemctl enable webapp.service"
+      "sudo systemctl enable webapp.service",
+      "statsd /statsd/statsd_config.js"
     ]
   }
 }

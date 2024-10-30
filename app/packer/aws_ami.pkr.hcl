@@ -164,8 +164,7 @@ build {
     inline = [
       # Enable the service
       "sudo systemctl daemon-reload",
-      "sudo systemctl enable webapp.service",
-      "statsd /statsd/statsd_config.js"
+      "sudo systemctl enable webapp.service"
     ]
   }
 }

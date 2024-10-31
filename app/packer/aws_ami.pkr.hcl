@@ -94,6 +94,11 @@ build {
     generated   = true
   }
 
+  provisioner "file" {
+    source      = "app/packer/cloudwatch-config.json"
+    destination = "/tmp/cloudwatch-config.json"
+  }
+
   provisioner "shell" {
     inline = [
       "sudo apt update",
@@ -107,8 +112,9 @@ build {
       "sudo apt install unzip -y",
       "node -v",
       "npm -v",
+      "sudo npm install -g statsd",
+      "sudo npm install statsd-cloudwatch-backend",
 
-      #"sudo mv /tmp/webapp.zip /opt",
       "sudo mv /tmp/webapp.service /etc/systemd/system",
       "sudo unzip /tmp/webapp.zip -d /opt/webapp",
       "sudo mv /tmp/.env /opt/webapp",
@@ -125,10 +131,31 @@ build {
 
   provisioner "shell" {
     inline = [
+      "sudo mkdir -p /opt/aws/amazon-cloudwatch-agent/etc",
+      "sudo mv /tmp/cloudwatch-config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json",
+      "sudo chown csye6225:csye6225 /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json",
+      "sudo touch /tmp/myapp.log",
+      "sudo mv /tmp/myapp.log /var/log",
+      "sudo chown -R csye6225:csye6225 /var/log"
+    ]
+  }
+
+  provisioner "shell" {
+    inline = [
+      "sudo apt-get update",
+      "sudo apt-get install -y wget",
+      "wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb",
+      "sudo dpkg -i amazon-cloudwatch-agent.deb",
+      "rm amazon-cloudwatch-agent.deb",
+      "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json -s"
+    ]
+  }
+
+  provisioner "shell" {
+    inline = [
       # Enable the service
       "sudo systemctl daemon-reload",
       "sudo systemctl enable webapp.service"
     ]
   }
-
 }

@@ -113,7 +113,7 @@ build {
       "node -v",
       "npm -v",
       "sudo npm install -g statsd",
-      "sudo npm install statsd-cloudwatch-backend",
+      "sudo npm install -g statsd-cloudwatch-backend",
 
       "sudo mv /tmp/webapp.service /etc/systemd/system",
       "sudo unzip /tmp/webapp.zip -d /opt/webapp",
@@ -155,7 +155,9 @@ build {
     inline = [
       # Enable the service
       "sudo systemctl daemon-reload",
-      "sudo systemctl enable webapp.service"
+      "sudo systemctl enable webapp.service",
+      "/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a start",
+      "statsd /opt/webapp/app/packer/statsd_config.js"
     ]
   }
 }

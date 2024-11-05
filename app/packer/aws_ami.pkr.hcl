@@ -156,8 +156,7 @@ build {
       # Enable the service
       "sudo systemctl daemon-reload",
       "sudo systemctl enable webapp.service",
-      "/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a start",
-      "statsd /opt/webapp/app/packer/statsd_config.js"
+      "/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a start"
     ]
   }
 }

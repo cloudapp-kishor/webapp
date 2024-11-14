@@ -3,7 +3,7 @@ name: Packer Build
 on:
   push:
     branches:
-        - main
+        - A08-01
 
 jobs:
   build:

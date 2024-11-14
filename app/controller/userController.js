@@ -95,8 +95,39 @@ const updateUserController = async (req, res) => {
   }
 };
 
+const verifyUserController = async (req, res) => {
+  try {
+    const token = req.params.token;
+
+    if (!token) {
+      return res.status(403).json({ message: 'Token not found' });
+    }
+
+    const user = await User.findOne({ where: { token } });
+    if (!user) {
+      return res.status(403).json({ message: 'Unauthenticated user' });
+    }
+
+    let tokenExpTime = new Date(user.emailSentTime).getTime() + (2 * 60 * 1000);
+    let currentTime = new Date().getTime();
+    if (currentTime > tokenExpTime) {
+      return res.status(403).json({ message: 'Token expired' });
+    }
+
+    user.verified_user = true;
+    await user.save();
+    logger.info(`User ${user.id} verified successfully`);
+
+    res.status(200).json({message: "User verified successfully"});
+  } catch (error) {
+    logger.error(`Error in verifying user: ${error.message}`);
+    res.status(error.statusCode || 403).json({ message: error.message });
+  }
+}
+
 module.exports = {
   createUserController,
   getUserController,
   updateUserController,
+  verifyUserController,
 };

@@ -33,6 +33,18 @@ const User = sequelize.define('User', {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },
+  token: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: "token"
+  },
+  emailSentTime: {
+    type: DataTypes.DATE
+  },
+  verified_user:{
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
 }, {
   timestamps: false,
   hooks: {

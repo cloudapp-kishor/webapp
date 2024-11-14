@@ -65,6 +65,10 @@ const createNewUser = async (req) => {
     verified_user: false,
   });
 
+  if (process.env.ENVIORNMENT === "localdev") {
+    return user;
+  }
+
   const messagePayload = JSON.stringify({
     userId: user.id,
     firstName: user.first_name,
@@ -75,7 +79,7 @@ const createNewUser = async (req) => {
     DB_PASSWORD: process.env.DB_PASSWORD,
     PORT: process.env.PORT,
     DB_HOST: process.env.DB_HOST,
-    verificationLink: `https://${process.env.URL}/v1/user/verify/${token}`
+    verificationLink: `http://${process.env.URL}/v1/user/verify/${token}`
   });
 
   await sns.publish({

@@ -35,7 +35,6 @@ const User = sequelize.define('User', {
   },
   token: {
     type: DataTypes.STRING,
-    allowNull: false,
     unique: "token"
   },
   emailSentTime: {

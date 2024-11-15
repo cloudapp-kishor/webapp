@@ -63,6 +63,7 @@ const createNewUser = async (req) => {
     password: hashedPassword,
     token: token,
     verified_user: false,
+    emailSentTime: new Date().getTime()
   });
 
   if (process.env.ENVIORNMENT === "localdev") {
@@ -70,15 +71,9 @@ const createNewUser = async (req) => {
   }
 
   const messagePayload = JSON.stringify({
-    userId: user.id,
     firstName: user.first_name,
     lastName: user.last_name,
     username: user.email,
-    DB_NAME: process.env.DB_NAME,
-    DB_USER: process.env.DB_USER,
-    DB_PASSWORD: process.env.DB_PASSWORD,
-    PORT: process.env.PORT,
-    DB_HOST: process.env.DB_HOST,
     verificationLink: `http://${process.env.URL}/v1/user/verify/${token}`
   });
 

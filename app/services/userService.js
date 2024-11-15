@@ -89,6 +89,10 @@ const getUserByEmail = async (email) => {
   return User.findOne( {where: { email } });
 };
 
+const getUserByToken = async (token) => {
+  return User.findOne({ where: { token } });
+};
+
 
 const updateUserDetails = async (email, req) => {
 
@@ -147,4 +151,5 @@ module.exports = {
   getUserByEmail,
   updateUserDetails,
   getUserById,
+  getUserByToken,
 };

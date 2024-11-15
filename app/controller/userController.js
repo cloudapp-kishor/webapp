@@ -1,4 +1,4 @@
-const { createNewUser, getUserByEmail, getUserById, updateUserDetails } = require('../services/userService');
+const { createNewUser, getUserByEmail, getUserById, updateUserDetails, getUserByToken } = require('../services/userService');
 const { logger } = require('../logger');
 const statsdClient = require('../metrics');
 
@@ -103,7 +103,7 @@ const verifyUserController = async (req, res) => {
       return res.status(403).json({ message: 'Token not found' });
     }
 
-    const user = await User.findOne({ where: { token } });
+    const user = await getUserByToken(token);
     if (!user) {
       return res.status(403).json({ message: 'Unauthenticated user' });
     }

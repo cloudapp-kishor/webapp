@@ -151,8 +151,8 @@ jobs:
       run: |
         new_version_number=$(aws ec2 create-launch-template-version \
           --launch-template-name ${{ secrets.LAUNCH_TEMPLATE_NAME }} \
-          --launch-template-data "{\"ImageId\":\"${{ steps.vars.outputs.latest_ami }}\"}" \
-          --source-version "${{ steps.vars.outputs.version_number }}" \
+          --launch-template-data "{\"ImageId\":\"${{ env.latest_ami }}\"}" \
+          --source-version "${{ env.version_number }}" \
           --query 'LaunchTemplateVersion.VersionNumber' --output text)
         echo "New Launch Template Version: $new_version_number"
         echo "new_version_number=$new_version_number" >> $GITHUB_ENV
@@ -162,7 +162,7 @@ jobs:
         REFRESH_ID=$(aws autoscaling start-instance-refresh \
           --auto-scaling-group-name ${{ secrets.AUTOSCALING_GROUP_NAME }} \
           --strategy Rolling \
-          --desired-configuration "{\"LaunchTemplate\":{\"LaunchTemplateName\":\"${{ secrets.LAUNCH_TEMPLATE_NAME }}\",\"Version\":\"${{ steps.create_lt_version.outputs.new_version_number }}\"}}" \
+          --desired-configuration "{\"LaunchTemplate\":{\"LaunchTemplateName\":\"${{ secrets.LAUNCH_TEMPLATE_NAME }}\",\"Version\":\"${{ env.new_version_number }}\"}}" \
           --query 'InstanceRefreshId' --output text)
         echo "REFRESH_ID=$REFRESH_ID" >> $GITHUB_ENV
 

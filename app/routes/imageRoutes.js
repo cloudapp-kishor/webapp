@@ -2,6 +2,7 @@ const express = require('express');
 const { addProfilePic, getProfilePic, deleteProfilePic } = require('../controller/imageController');
 const basicAuthorization = require('../middleware/authMiddleware');
 const upload = require('../middleware/imageMiddleware');
+const { verifyUserMiddleware } = require('../middleware/verifyUserMiddleware');
 
 const router = express.Router();
 
@@ -13,9 +14,9 @@ const headers = {
 router.head('/', (req,res) => {res.status(405).header(headers).send();});
 router.options('/', (req,res) => {res.status(405).header(headers).send();});
 
-router.post('/', basicAuthorization, upload, addProfilePic);
-router.get('/', basicAuthorization, getProfilePic);
-router.delete('/', basicAuthorization, deleteProfilePic);
+router.post('/', basicAuthorization, verifyUserMiddleware, upload, addProfilePic);
+router.get('/', basicAuthorization, verifyUserMiddleware, getProfilePic);
+router.delete('/', basicAuthorization, verifyUserMiddleware, deleteProfilePic);
 
 router.all('/', (req,res) => {res.status(405).header(headers).send();});
 

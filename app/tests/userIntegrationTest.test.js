@@ -60,6 +60,8 @@ describe('User Routes Integration Tests', () => {
         email: 'kishorkashid1@gmail.com',
         password: await bcrypt.hash('Kishor@1', 10), // Store the hashed password
       });
+      user.verified_user = true;
+      await user.save();
     });
 
     it('should return user data for the authenticated user', async () => {

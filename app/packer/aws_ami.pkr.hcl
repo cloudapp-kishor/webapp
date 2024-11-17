@@ -69,7 +69,7 @@ source "amazon-ebs" "ubuntu" {
   ami_users       = [var.DEV_ACCOUNT_ID, var.DEMO_ACCOUNT_ID]
 
   tags = {
-    Name        = "webapp-image"
+    Name        = "webappAMI"
     Environment = "Dev"
   }
 }

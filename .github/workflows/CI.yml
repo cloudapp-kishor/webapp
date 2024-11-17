@@ -63,3 +63,4 @@ jobs:
           DB_PASSWORD: ${{secrets.DB_PASSWORD}}
           DB_USER: ${{secrets.DB_USER}}
           HOST: ${{secrets.DB_HOST}}
+          ENVIORNMENT: ${{secrets.ENVIORNMENT}}

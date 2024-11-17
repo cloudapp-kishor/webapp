@@ -1,7 +1,8 @@
 const express = require('express');
-const { createUserController, getUserController, updateUserController } = require('../controller/userController');
+const { createUserController, getUserController, updateUserController, verifyUserController } = require('../controller/userController');
 const basicAuthorization = require('../middleware/authMiddleware');
 const { healthCheck } = require('../services/healthService');
+const { verifyUserMiddleware } = require('../middleware/verifyUserMiddleware');
 
 const router = express.Router();
 
@@ -32,8 +33,10 @@ router.options('/user/self', (req,res) => {res.status(405).header(headers).send(
 
 router.post('/user', createUserController);
 
-router.get('/user/self', basicAuthorization, getUserController);
-router.put('/user/self', basicAuthorization, updateUserController);
+router.get('/user/self', basicAuthorization, verifyUserMiddleware, getUserController);
+router.put('/user/self', basicAuthorization, verifyUserMiddleware, updateUserController);
+
+router.get('/user/verify/:token', verifyUserController);
 
 router.all('/user', (req,res) => {res.status(405).header(headers).send();});
 router.all('/user/self', (req,res) => {res.status(405).header(headers).send();});

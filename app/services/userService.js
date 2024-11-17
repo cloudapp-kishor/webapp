@@ -1,6 +1,11 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/userModel');
 const validator = require('validator');
+const { v4: uuidv4 } = require('uuid');
+const AWS = require('aws-sdk');
+AWS.config.update({ region: process.env.AWS_REGION || 'us-east-2' });
+const sns = new AWS.SNS();
+const SNS_TOPIC_ARN = process.env.SNS_TOPIC_ARN;
 
 
 const hashPassword = async (password) => {
@@ -49,16 +54,43 @@ const createNewUser = async (req) => {
   }
 
   const hashedPassword = await hashPassword(password);
-  return User.create({
+  const token = uuidv4();
+
+  const user = await User.create({
     first_name,
     last_name,
     email,
     password: hashedPassword,
+    token: token,
+    verified_user: false,
+    emailSentTime: new Date().getTime()
   });
+
+  if (process.env.ENVIORNMENT === "localdev") {
+    return user;
+  }
+
+  const messagePayload = JSON.stringify({
+    firstName: user.first_name,
+    lastName: user.last_name,
+    username: user.email,
+    verificationLink: `http://${process.env.URL}/v1/user/verify/${token}`
+  });
+
+  await sns.publish({
+    Message: messagePayload,
+    TopicArn: SNS_TOPIC_ARN,
+  }).promise();
+
+  return user;
 };
 
 const getUserByEmail = async (email) => {
   return User.findOne( {where: { email } });
+};
+
+const getUserByToken = async (token) => {
+  return User.findOne({ where: { token } });
 };
 
 
@@ -119,4 +151,5 @@ module.exports = {
   getUserByEmail,
   updateUserDetails,
   getUserById,
+  getUserByToken,
 };

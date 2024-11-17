@@ -37,9 +37,9 @@ app.use(checkPayload);
 
 app.use('/healthz', healthRoutes);
 
-app.use('/v1', userRoutes);
+app.use('/v2', userRoutes);
 
-app.use('/v1/user/self/pic', imageRoutes);
+app.use('/v2/user/self/pic', imageRoutes);
 
 app.all('/healthz', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

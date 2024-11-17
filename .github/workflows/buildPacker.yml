@@ -145,15 +145,22 @@ jobs:
         echo "::set-output name=version_number::$version_number"
  
     - name: Create new Launch Template version
+      id: create_lt_version
       run: |
-        aws ec2 create-launch-template-version --launch-template-name webapp_lt  --launch-template-data "ImageId=${{ steps.vars.outputs.latest_ami }}" --source-version "${{ steps.vars.outputs.version_number }}"
+        new_version_number=$(aws ec2 create-launch-template-version \
+          --launch-template-name webapp_lt \
+          --launch-template-data "{\"ImageId\":\"${{ steps.vars.outputs.latest_ami }}\"}" \
+          --source-version "${{ steps.vars.outputs.version_number }}" \
+          --query 'LaunchTemplateVersion.VersionNumber' --output text)
+        echo "New Launch Template Version: $new_version_number"
+        echo "::set-output name=new_version_number::$new_version_number"
 
     - name: Autoscaling group instance refresh
       run: |
         REFRESH_ID=$(aws autoscaling start-instance-refresh \
           --auto-scaling-group-name csye6225_asg \
           --strategy Rolling \
-          --desired-configuration "{\"LaunchTemplate\":{\"LaunchTemplateName\":\"webapp_lt\",\"Version\":\"${{ steps.vars.outputs.version_number }}\"}}" \
+          --desired-configuration "{\"LaunchTemplate\":{\"LaunchTemplateName\":\"webapp_lt\",\"Version\":\"${{ steps.create_lt_version.outputs.new_version_number }}\"}}" \
           --query 'InstanceRefreshId' --output text)
         echo "REFRESH_ID=$REFRESH_ID" >> $GITHUB_ENV
 

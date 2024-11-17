@@ -150,7 +150,11 @@ jobs:
 
     - name: Autoscaling group instance refresh
       run: |
-        REFRESH_ID=$(aws autoscaling start-instance-refresh --auto-scaling-group-name csye6225_asg --strategy Rolling --desired-configuration LaunchTemplateName=webapp_lt,Version=$LATEST)
+        REFRESH_ID=$(aws autoscaling start-instance-refresh \
+          --auto-scaling-group-name csye6225_asg \
+          --strategy Rolling \
+          --desired-configuration "{\"LaunchTemplate\":{\"LaunchTemplateName\":\"webapp_lt\",\"Version\":\"${{ steps.vars.outputs.version_number }}\"}}" \
+          --query 'InstanceRefreshId' --output text)
         echo "REFRESH_ID=$REFRESH_ID" >> $GITHUB_ENV
 
     - name: Wait for Instance Refresh

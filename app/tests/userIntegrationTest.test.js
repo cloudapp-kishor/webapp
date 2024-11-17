@@ -26,7 +26,7 @@ describe('User Routes Integration Tests', () => {
       };
 
       const response = await request(app)
-        .post('/v1/user')
+        .post('/v2/user')
         .send(userData)
         .expect(201);
     });
@@ -41,7 +41,7 @@ describe('User Routes Integration Tests', () => {
       };
 
       const response = await request(app)
-        .post('/v1/user')
+        .post('/v2/user')
         .send(invalidUserData)
         .expect(400);
 
@@ -70,7 +70,7 @@ describe('User Routes Integration Tests', () => {
 
       // Make the request with Basic Auth
       const response = await request(app)
-        .get('/v1/user/self')
+        .get('/v2/user/self')
         .set('Authorization', `Basic ${base64Token}`)
         .expect(200);
 

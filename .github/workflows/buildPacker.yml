@@ -127,11 +127,20 @@ jobs:
         -var "DEV_ACCOUNT_ID=${{secrets.DEV_ACCOUNT_ID}}" \
         app/packer/.
       
-    - name: Configure AWS CLI for Demo Account
+    - name: Configure AWS CLI for Dev/Demo Account
       run: |
-        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID_DEMO }}
-        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY_DEMO }}
-        aws configure set region ${{secrets.AWS_REGION}}
+        if [ "${{ secrets.DEPLOY_ENVIRONMENT }}" = "dev" ]; then
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ secrets.AWS_REGION }}
+        elif [ "${{ secrets.DEPLOY_ENVIRONMENT }}" = "demo" ]; then
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID_DEMO }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY_DEMO }}
+          aws configure set region ${{ secrets.AWS_REGION }}
+        else
+          echo "Invalid deploy environment specified: ${{ secrets.DEPLOY_ENVIRONMENT }}"
+          exit 1
+        fi
 
     - name: Get Launch Template Version
       id: vars

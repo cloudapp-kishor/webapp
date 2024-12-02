@@ -74,7 +74,7 @@ const createNewUser = async (req) => {
     firstName: user.first_name,
     lastName: user.last_name,
     username: user.email,
-    verificationLink: `http://${process.env.URL}/v1/user/verify/${token}`
+    verificationLink: `https://${process.env.URL}/v1/user/verify/${token}`
   });
 
   await sns.publish({

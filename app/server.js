@@ -8,6 +8,7 @@ const { sequelize } = require('./databaseConfig/databaseConnect.js');
 const { createDatabase } = require('./databaseConfig/databaseConnect.js');
 const imageRoutes = require('./routes/imageRoutes.js');
 const {logger} = require('./logger.js');
+const cicdRoutes = require('./routes/cicdRoutes.js');
 
 
 createDatabase()
@@ -34,6 +35,8 @@ const app = express();
 app.use(express.json());
 
 app.use(checkPayload);
+
+app.use('/cicd', cicdRoutes);
 
 app.use('/healthz', healthRoutes);
 
